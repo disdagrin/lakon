@@ -1,1 +1,519 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="logo1.png">
+    <title>Sistem Digital untuk Pengaduan Konsumen Disdagrin </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+/* Toast Styles */
+    .toast {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      min-width: 250px;
+      max-width: 350px;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      color: white;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.4s ease;
+      z-index: 1000;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast-success { background: #16a34a; } /* green */
+    .toast-error { background: #dc2626; }   /* red */
+
+.tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .custom-shadow {
+            box-shadow: 0 4px 50px rgba(139, 69, 19, 0.15);
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #f8de7e 0%, #d4af37 50%, #b8860b 100%);
+        }
+        .wine-gradient {
+            background: linear-gradient(135deg, hsl(119, 42%, 32%) 0%, hsl(92, 88%, 56%) 50%, #0717cb 100%);
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
+                border-radius: 0.5rem;
+    #gol3 form {
+        background-color: #ffe4e6; /* pink-100 */
+        border: 2px solid #ef4444; /* red-500 */
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+    /* Override input border color on focus per golongan */
+    #gol1 form input:focus, #gol1 form select:focus {
+        border-color: #d4af37;
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+    }
+    #gol2 form input:focus, #gol2 form select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    }
+    #gol3 form input:focus, #gol3 form select:focus {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
+    }
+
+        .form-container {
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .glass-card {
+            background: #ffffffe8;
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(15, 14, 14, 0.105);
+            padding: 2rem;
+            width: 100%;
+            max-width: 1000px;
+        }
+        
+        .file-upload {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .file-upload:hover {
+            border-color: #f2eef6;
+            background: #0029de1a;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #0737e3 0%, #4c07b3 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            border-color: #f2eef6;
+            color:#17120193;
+            background: linear-gradient(135deg, #0737e3c5 0%, #4c07b3bb 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(2, 27, 249, 0.112);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #f1a808 0%, #f1a808 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            border-color: #f2eef6;
+            color:#17120180;
+            background: linear-gradient(135deg, #f1a708e1 0%, #f1a708a9 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+@keyframes fadeInScale {
+  from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-fadeIn {
+  animation: fadeInScale 0.25s ease-out;
+}
+
+        
+
+    </style>
+</head>
+<body class="bg-white">
+    <header class="bg-white/90 backdrop-blur-md shadow-md px-4 py-3 flex items-center justify-between relative z-20">
+  <!-- Kiri: Logo -->
+  <div class="flex items-center flex-shrink-0">
+    <img src="logo.png" alt="Logo Full" class="hidden md:block h-20">
+
+  <!-- Logo versi simple (mobile) -->
+  <img src="logo1.png" alt="Logo Simple" class="block md:hidden h-12">
+<!--       <h1 class="text-base md:text-lg font-bold ">
+      Dinas Perdagangan dan Perindustrian
+    </h1> -->
+  </div>
+
+  <!-- Tengah: Judul -->
+  <div class="absolute left-1/2 transform -translate-x-1/2 text-center">
+    <h1 class="text-base md:text-lg font-bold ">
+      Formulir Pengaduan Konsumen
+    </h1>
+      <p id="teksTanggalJam" class="text-[11px] md:text-xs text-gray-700 font-semibold mt-1"></p>
+  </div>
+
+  <!-- Kanan: Tanggal & Menu -->
+  <div class="flex items-center space-x-4 text-gray-600">
+    <!-- Dropdown Buttons -->
+    <div class="relative z-50">
+      <button id="btnList" class="hover:text-purple-600 transition focus:outline-none">
+        <i class="fas fa-list text-lg"></i>
+      </button>
+      <div id="dropdownList" 
+           class="hidden absolute right-0 mt-2 w-44 bg-white/90 backdrop-blur-md border border-purple-100 rounded-xl shadow-xl overflow-hidden animate-fadeIn">
+        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">📦 Lihat Produk</a>
+        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">➕ Tambah Produk</a>
+      </div>
+    </div>
+
+    <div class="relative z-50">
+      <button id="btnSearch" class="hover:text-purple-600 transition focus:outline-none">
+        <i class="fas fa-search text-lg"></i>
+      </button>
+      <div id="dropdownSearch" 
+           class="hidden absolute right-0 mt-2 w-44 bg-white/90 backdrop-blur-md border border-purple-100 rounded-xl shadow-xl overflow-hidden animate-fadeIn">
+        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">🔍 Cari Produk</a>
+        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">🎯 Filter Data</a>
+      </div>
+    </div>
+
+    <div class="relative z-50">
+      <button id="btnSetting" class="hover:text-purple-600 transition focus:outline-none">
+        <i class="fas fa-cog text-lg"></i>
+      </button>
+      <div id="dropdownSetting" 
+           class="hidden absolute right-0 mt-2 w-44 bg-white/90 backdrop-blur-md border border-purple-100 rounded-xl shadow-xl overflow-hidden animate-fadeIn">
+        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">👤 Profil</a>
+        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">⚙ Pengaturan</a>
+        <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">🚪 Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aksen Gradient bawah header -->
+  <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-600"></div>
+</header>
+
+    <div class="form-container mx-auto px-4 py-4">
+        <div class="glass-card">
+            <div class="text-center mb-8">
+                <p class="text-gray-600">Lengkapi data pengaduan konsemen Anda dengan benar</p>
+            </div>
+
+            <form id="formData" class="space-y-6">
+       <!-- Nama -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-building text-purple-600 mr-2"></i>
+                        Nama *
+                    </label>
+                    <input 
+                        type="text" 
+                        name="nama" 
+                        required 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                        placeholder="Masukkan Nama Lengkap"
+                    >
+                </div>
+<!-- Alamat -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-map-marker-alt text-purple-600 mr-2"></i>
+                        Alamat *
+                    </label>
+                    <textarea 
+                        name="alamat" 
+                        required 
+                        rows="3"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                        placeholder="Alamat lengkap"
+                    ></textarea>
+                </div>
+
+                <!-- No. Telp -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-phone text-purple-600 mr-2"></i>
+                        No. Telepon *
+                    </label>
+                    <input 
+                        type="tel" 
+                        name="noTelp" 
+                        required 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                        placeholder="Contoh: 081234567890"
+                    >
+                </div>
+                <!-- Deskripsi-->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-user-tie text-purple-600 mr-2"></i>
+                        Deskripsi Aduan *
+                    </label>
+                    <textarea 
+                        name="deskripsi" 
+                        required 
+                        rows="3"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                        placeholder="Deskripsikan permasalahan mengenai fokus aduan secara detail"
+                    ></textarea>
+                </div>
+
+                
+
+                <!-- Izin Usaha Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-file-upload text-purple-600 mr-2"></i>
+                        File Pendukung (Upload File) *
+                    </label>
+                    <div class="file-upload" id="fileUploadArea">
+                        <input type="file" id="buktiFile" name="files" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" multiple
+                         class="hidden">
+                        <div class="text-center">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-purple-600 mb-3"></i>
+                            <p class="text-sm text-gray-600 mb-2">Klik untuk mengupload file pendukung</p>
+                            <p class="text-xs text-gray-500">Format: PDF, JPG, PNG, DOC (Maks. 5MB)</p>
+                            <div id="fileName" class="text-sm text-purple-600 font-medium mt-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                    <button 
+                        type="submit" 
+                        class="btn-primary flex-1"
+                        id="submitBtn"
+                    >
+                        <i class="fas fa-save mr-2"></i>
+                        Simpan Data
+                    </button>
+                    <!-- <button type="button" 
+        class="btn-secondary flex-1"
+        id="btnIsiListProduk">
+    <i class="fas fa-list mr-2"></i>
+    Isi List Produk
+</button> -->
+                </div>
+            </form>
+
+           
+            
+        </div>
+    </div>
+    
+    <!-- Loading Overlay -->
+            <div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg p-6 text-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+                    <p class="text-gray-700">Mengirim data...</p>
+                </div>
+            </div>
+            <!-- Overlay Konfirmasi -->
+<div id="successOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+  <div class="bg-white rounded-xl shadow-lg p-6 w-96 text-center">
+    <div class="text-green-600 text-4xl mb-3">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    <h2 class="text-xl font-semibold mb-4">Data berhasil disimpan!</h2>
+    <button 
+      type="button"
+      class="btn-secondary flex items-center justify-center gap-2 mx-auto"
+      id="btnIsiListProdukOverlay">
+      <i class="fas fa-list"></i>
+      Isi Aduan Lagi
+    </button>
+  </div>
+</div>
+
+</div>
+
+<div id="toastContainer"></div>
+   <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxpFVskSBjcz3XX68a9iYoOkbPk8zTKrfiTK_G9NqCbfRSIVPTne2D7c8BeTR8YqfvH9w/exec";
+
+    const form = document.getElementById('formData');
+    const fileInput = document.getElementById('buktiFile');
+    const fileName = document.getElementById('fileName');
+    const submitBtn = document.getElementById('submitBtn');
+    const fileUploadArea = document.getElementById('fileUploadArea');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    // Fungsi Toast
+    function showToast(message, type = "success") {
+      const toast = document.createElement("div");
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      document.getElementById("toastContainer").appendChild(toast);
+      setTimeout(() => toast.classList.add("show"), 100);
+      setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 400);
+      }, 4000);
+    }
+
+    // Klik area upload → buka file chooser
+    fileUploadArea.addEventListener('click', () => fileInput.click());
+
+    // tampilkan nama file
+    fileInput.addEventListener('change', () => {
+      fileName.textContent = fileInput.files[0]?.name || "";
+    });
+
+    // submit form
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!fileInput.files.length) {
+    showToast("Silakan upload minimal 1 file pendukung", "error");
+    return;
+  }
+
+  submitBtn.disabled = true;
+  loadingOverlay.classList.remove("hidden");
+
+  try {
+    const formData = new FormData();
+    formData.append("nama", form.nama.value);
+    formData.append("alamat", form.alamat.value);
+    formData.append("noTelp", form.noTelp.value);
+    formData.append("deskripsi", form.deskripsi.value);
+
+    /// kumpulkan semua file jadi array JSON
+let filesArray = [];
+for (let i = 0; i < fileInput.files.length; i++) {
+  const file = fileInput.files[i];
+  if (file.size > 5 * 1024 * 1024) {
+    showToast(`File ${file.name} melebihi 5MB`, "error");
+    return;
+  }
+  const base64File = await toBase64(file);
+  filesArray.push({
+    name: file.name,
+    type: file.type,
+    data: base64File
+  });
+}
+
+// kirim array JSON sebagai 1 parameter
+formData.append("fileData", JSON.stringify(filesArray));
+
+    const response = await fetch(SCRIPT_URL, { method: "POST", body: formData });
+    const result = await response.json();
+
+    if (result.success) {
+      document.getElementById("successOverlay").classList.remove("hidden");
+      form.reset();
+      fileName.textContent = '';
+    } else {
+      throw new Error(result.message || "Gagal menyimpan data");
+    }
+  } catch (error) {
+    showToast("❌ Error: " + error.message, "error");
+  } finally {
+    submitBtn.disabled = false;
+    loadingOverlay.classList.add("hidden");
+  }
+});
+
+
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(",")[1]);
+        reader.onerror = (error) => reject(error);
+      });
+    }
+
+    
+//     // Tombol pindah ke halaman produk (form & overlay)
+// document.getElementById("btnIsiListProduk").addEventListener("click", () => {
+//   window.location.href = "index.html";
+// });
+
+document.getElementById("btnIsiListProdukOverlay").addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+
+// Fungsi toggle dropdown
+  function toggleDropdown(buttonId, dropdownId) {
+    const dropdowns = document.querySelectorAll("[id^='dropdown']");
+    dropdowns.forEach(d => {
+      if (d.id !== dropdownId) d.classList.add("hidden"); // tutup dropdown lain
+    });
+    document.getElementById(dropdownId).classList.toggle("hidden");
+  }
+
+  // Event untuk setiap tombol
+  document.getElementById("btnList").addEventListener("click", () => toggleDropdown("btnList","dropdownList"));
+  document.getElementById("btnSearch").addEventListener("click", () => toggleDropdown("btnSearch","dropdownSearch"));
+  document.getElementById("btnSetting").addEventListener("click", () => toggleDropdown("btnSetting","dropdownSetting"));
+
+  // Tutup dropdown kalau klik di luar
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".relative")) {
+      document.querySelectorAll("[id^='dropdown']").forEach(d => d.classList.add("hidden"));
+    }
+  });
+
+  
+
+function updateTime() {
+  const now = new Date();
+  const options = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  const tanggal = now.toLocaleDateString("id-ID", options);
+
+  const jam = String(now.getHours()).padStart(2, '0');
+  const menit = String(now.getMinutes()).padStart(2, '0');
+  const detik = String(now.getSeconds()).padStart(2, '0');
+  const waktu = `${jam}:${menit}:${detik}`;
+
+  document.getElementById("teksTanggalJam").textContent = `${tanggal} | ${waktu}`;
+}
+
+setInterval(updateTime, 1000);
+updateTime();
+
+  </script>
+
+</body>
+<footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 Sistem Digital Pengaduan Konsumen Dinas Perdagangan dan Perindustrian.</p>
+            <p class="text-gray-400 text-sm mt-2">Kabupaten Barito Utara</p>
+        </div>
+    </footer>
+</html>
