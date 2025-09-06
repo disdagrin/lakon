@@ -1,1 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Lakon</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body class="bg-white">
+
+  <!-- Navbar -->
+  <header class="bg-white/90 backdrop-blur-md shadow-md px-4 py-3 flex items-center justify-between relative z-20">
+    <!-- Kiri: Logo -->
+  <div class="flex items-center flex-shrink-0">
+    <img src="logo.png" alt="Logo Full" class="hidden md:block h-20">
+
+  <!-- Logo versi simple (mobile) -->
+  <img src="logo1.png" alt="Logo Simple" class="block md:hidden h-12">
+<!--       <h1 class="text-base md:text-lg font-bold ">
+      Dinas Perdagangan dan Perindustrian
+    </h1> -->
+  </div>
+  <!-- Tengah: Judul -->
+  <div class="absolute left-1/2 transform -translate-x-1/2 text-center">
+    <h1 class="text-base md:text-lg font-bold ">
+      Dashboard LAKon
+    </h1>
+      <p id="teksTanggalJam" class="text-[11px] md:text-xs text-gray-700 font-semibold mt-1"></p>
+  </div>
+
+  <!-- Kanan: Tanggal & Menu -->
+  <div class="flex items-center space-x-4 text-gray-600">
+
+    <!-- Notifikasi -->
+    <div class="relative z-50">
+      <button id="notifBtn" class="relative bg-indigo-500 p-2 rounded-lg hover:bg-indigo-700">
+        🔔
+        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">99</span>
+      </button>
+      <!-- Panel Notifikasi -->
+      <div id="notifPanel" class="hidden absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-xl p-4 z-50">
+        <h4 class="font-semibold text-gray-700 mb-2">Notifikasi</h4>
+        <ul class="space-y-2 text-sm text-gray-600">
+          <!-- <li class="border-b pb-1">Aduan baru dari <b>Andi</b></li>
+          <li class="border-b pb-1">File pendukung diupload oleh <b>Sinta</b></li>
+          <li>Aduan <b>Budi</b> sedang diproses</li> -->
+        </ul>
+      </div>
+    </div>
+
+    <a href="login.html" class="text-sm underline ml-4">Logout</a>
+    <!-- Aksen Gradient bawah header -->
+  <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-600"></div>
+  </header>
+
+  <!-- Konten -->
+  <main class="p-6">
+    <h2 class="text-xl font-bold mb-4">Selamat Datang</h2>
+    <p class="text-gray-700">Ini adalah dashboard sistem layanan Aduan Konsumen.</p>
+
+    
+      <!-- <div class="p-4 bg-white rounded-xl shadow">
+        <h3 class="font-semibold text-gray-700">Produk Terdaftar</h3>
+        <p class="text-2xl font-bold text-indigo-600">120</p>
+      </div>
+      <div class="p-4 bg-white rounded-xl shadow">
+        <h3 class="font-semibold text-gray-700">Golongan Minol</h3>
+        <p class="text-2xl font-bold text-indigo-600">A, B, C</p>
+      </div>
+    </div> -->
+
+    <!-- Tabel Aduan -->
+    <div class="mt-10 bg-white p-6 rounded-xl shadow">
+  <!-- <div id="totalAduan" class="p-4 bg-white shadow rounded-lg text-center"></div>     -->
+  <h3 class="text-lg font-bold mb-4 text-gray-800">DAFTAR ADUAN
+    <p class="text-3xl font-semibold text-blue-600" id="totalAduanValue">0</p>
+  </h3>
+  
+  <!-- Statistik -->
+    
+  <!-- <h2 class="text-lg font-bold">Total Aduan</h2> -->
+  
+
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse border border-gray-200 text-sm">
+      <thead class="bg-indigo-600 text-white">
+        <tr>
+          <th class="px-4 py-2 border">Nama</th>
+          <th class="px-4 py-2 border">Alamat</th>
+          <th class="px-4 py-2 border">No. Telp</th>
+          <th class="px-4 py-2 border">Deskripsi Aduan</th>
+          <th class="px-4 py-2 border">File Pendukung</th>
+          <th class="px-4 py-2 border">Aksi</th> <!-- ✅ kolom baru -->
+        </tr>
+      </thead>
+      <tbody id="aduanBody">
+        <tr><td colspan="5" class="text-center py-4">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+  </main>
+
+<audio id="notifSound">
+  <source src="notif.mp3" type="audio/ogg">
+</audio>
+
+<script>
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwSDiRv1n-DO3qVDSYVPHti-Fs3r35sefmS1WV66KUEXtdp6_bjE7qtW2C8kB20cNq-vw/exec"; 
+let lastCount = 0;
+
+
+
+
+async function loadAduan() {
+  try {
+    const res = await fetch(WEBAPP_URL);
+    const result = await res.json();
+
+    if (result.success) {
+      const tbody = document.getElementById("aduanBody");
+      tbody.innerHTML = "";
+
+      result.data.forEach(item => {
+        const tr = document.createElement("tr");
+        tr.classList.add("hover:bg-gray-50");
+
+        tr.innerHTML = `
+          <td class="px-4 py-2 border">${item.Nama || ""}</td>
+          <td class="px-4 py-2 border">${item.Alamat || ""}</td>
+          <td class="px-4 py-2 border">${item["No. Telp"] || ""}</td>
+          <td class="px-4 py-2 border">${item.Deskripsi || ""}</td>
+          <td class="px-4 py-2 border text-center">
+            ${item["File URL(s)"] 
+              ? item["File URL(s)"].split(",").map(f => 
+                  `<a href="${f}" target="_blank" class="text-indigo-600 underline">File</a>`
+                ).join(" | ") 
+              : "-"
+            }
+          </td>
+          <td class="px-4 py-2 border text-center">
+            <button onclick="hapusData(${item.RowIndex})" 
+              class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+              Hapus
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // ✅ Update total aduan
+      document.getElementById("totalAduanValue").textContent = result.data.length;
+
+      // 🔔 Cek data baru
+      if (result.data.length > lastCount && lastCount !== 0) {
+        const newData = result.data.slice(lastCount); 
+        newData.forEach(d => {
+          addNotification(`Aduan baru dari <b>${d.Nama}</b>`);
+        });
+
+        document.getElementById("notifSound").play();
+        document.getElementById("notifPanel").classList.remove("hidden");
+      }
+
+      lastCount = result.data.length;
+    }
+  } catch (err) {
+    console.error("Error load data:", err);
+  }
+}
+
+// 🚨 Fungsi hapus data
+async function hapusData(rowIndex) {
+  if (!confirm("Yakin mau hapus data ini?")) return;
+
+  try {
+    const res = await fetch(WEBAPP_URL, {
+      method: "POST",
+      body: new URLSearchParams({
+        action: "delete",
+        row: rowIndex
+      })
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      alert("✅ " + result.message);
+      loadAduan(); // refresh data
+    } else {
+      alert("❌ " + result.message);
+    }
+  } catch (err) {
+    console.error("Error hapus data:", err);
+  }
+}
+
+// fungsi tambah notifikasi ke panel
+function addNotification(message) {
+  const notifList = document.querySelector("#notifPanel ul");
+  const li = document.createElement("li");
+  li.className = "border-b pb-1";
+  li.innerHTML = message;
+  notifList.prepend(li);
+}
+
+// load pertama kali
+window.onload = () => {
+  loadAduan();
+  setInterval(loadAduan, 10000); // refresh tiap 10 detik
+};
+
+// Toggle panel notifikasi manual
+document.getElementById("notifBtn").addEventListener("click", function() {
+  const panel = document.getElementById("notifPanel");
+  panel.classList.toggle("hidden");
+});
+
+// Update tanggal & jam
+function updateTime() {
+  const now = new Date();
+  const options = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  const tanggal = now.toLocaleDateString("id-ID", options);
+
+  const jam = String(now.getHours()).padStart(2, '0');
+  const menit = String(now.getMinutes()).padStart(2, '0');
+  const detik = String(now.getSeconds()).padStart(2, '0');
+  const waktu = `${jam}:${menit}:${detik}`;
+
+  document.getElementById("teksTanggalJam").textContent = `${tanggal} | ${waktu}`;
+}
+setInterval(updateTime, 1000);
+updateTime();
+</script>
+
+
+<!-- 🔔 Modal Konfirmasi Hapus -->
+<div id="modalHapus" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Konfirmasi Hapus</h2>
+    <p class="text-gray-600 mb-6">Apakah kamu yakin ingin menghapus data ini?</p>
+    <div class="flex justify-end space-x-3">
+      <button onclick="tutupModal()" 
+              class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+        Batal
+      </button>
+      <button id="btnKonfirmasiHapus"
+              class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+        Hapus
+      </button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
 
