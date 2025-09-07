@@ -479,18 +479,29 @@ formData.append("fileData", JSON.stringify(filesArray));
 const SECRET_PIN = "123456";  
 
 // Tangkap elemen modal
+const dashboardLink = document.querySelector("a[href='dashboard.html']");
 const pinModal = document.getElementById("pinModal");
 const pinInput = document.getElementById("pinInput");
 const submitPinBtn = document.getElementById("submitPinBtn");
 const cancelPinBtn = document.getElementById("cancelPinBtn");
 
 // Buka modal saat klik Dashboard
-document.querySelector("a[href='dashboard.html']").addEventListener("click", function(e) {
-  e.preventDefault(); // cegah langsung masuk dashboard
-  pinModal.classList.remove("hidden");
-  pinInput.value = "";
-  pinInput.focus();
-});
+// document.querySelector("a[href='dashboard.html']").addEventListener("click", function(e) {
+//   e.preventDefault(); // cegah langsung masuk dashboard
+//   pinModal.classList.remove("hidden");
+//   pinInput.value = "";
+//   pinInput.focus();
+// });
+
+if (dashboardLink && pinModal && pinInput) {
+  dashboardLink.addEventListener("click", function(e) {
+    e.preventDefault(); // cegah langsung masuk dashboard
+    pinModal.classList.remove("hidden");
+    pinInput.value = "";
+    pinInput.focus();
+  });
+}
+       
 
 // Tombol Batal → tutup modal
 cancelPinBtn.addEventListener("click", () => {
