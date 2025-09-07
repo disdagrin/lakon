@@ -193,7 +193,7 @@ input:focus, select:focus, textarea:focus {
       <div id="dropdownList" 
            class="hidden absolute right-0 mt-2 w-44 bg-white/90 backdrop-blur-md border border-purple-100 rounded-xl shadow-xl overflow-hidden animate-fadeIn">
         <a href="status.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">Status Aduan</a>
-        <a href="dashboard.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">Dashboard</a>
+        <a href="dashboard.html" id="dashboardLink" class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50">Dashboard</a>
       </div>
     </div>
 
@@ -491,7 +491,17 @@ formData.append("fileData", JSON.stringify(filesArray));
       });
     }
        
-const dashboardLink = document.querySelector("#dashboardLink");
+const dashboardLinks = document.querySelectorAll("a[href='dashboard.html']");
+dashboardLinks.forEach(link => {
+  link.addEventListener("click", function(e) {
+    e.preventDefault();
+    pinModal.classList.remove("hidden");
+    pinInput.value = "";
+    pinInput.focus();
+    pinError.classList.add("hidden");
+  });
+});
+
 const pinModal = document.getElementById("pinModal");
 const pinInput = document.getElementById("pinInput");
 const btnCancel = document.getElementById("btnCancel");
@@ -501,17 +511,17 @@ const pinError = document.getElementById("pinError");
 // PIN yang dianggap benar
 const correctPIN = "123456";
 
-// Klik Dashboard → buka modal
-if (dashboardLink && pinModal) {
-  dashboardLink.addEventListener("click", function(e) {
-    e.preventDefault();
-    console.log("Klik dashboard → buka modal"); // cek di console
-    pinModal.classList.remove("hidden"); // munculin modal
-    pinInput.value = "";
-    pinInput.focus();
-    pinError.classList.add("hidden");
-  });
-}
+// // Klik Dashboard → buka modal
+// if (dashboardLink && pinModal) {
+//   dashboardLink.addEventListener("click", function(e) {
+//     e.preventDefault();
+//     console.log("Klik dashboard → buka modal"); // cek di console
+//     pinModal.classList.remove("hidden"); // munculin modal
+//     pinInput.value = "";
+//     pinInput.focus();
+//     pinError.classList.add("hidden");
+//   });
+// }
 
 if (btnCancel) {
   btnCancel.addEventListener("click", () => {
