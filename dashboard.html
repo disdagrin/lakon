@@ -14,12 +14,8 @@
 
 
 </head>
-<body class="bg-white">
-<!-- Konten Dashboard -->
-<div id="dashboardContent" class="p-4 hidden">
-  <h1 class="text-2xl font-bold mb-4">Selamat datang di Dashboard</h1>
-  <p>Hanya bisa diakses setelah memasukkan PIN.</p>
-</div>
+<body id="dashboardContent" class="bg-white p-4 hidden">
+  
 <!-- Modal PIN -->
 <div id="pinModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white rounded-xl shadow-lg p-6 w-80 text-center">
@@ -255,12 +251,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const dashboardContent = document.getElementById("dashboardContent");
   const correctPIN = "123456";
 
-  // Awal: sembunyikan konten dashboard
+  // Default: sembunyikan konten dashboard, tampilkan modal
   dashboardContent.classList.add("hidden");
   pinModal.classList.remove("hidden");
   pinModal.classList.add("flex");
 
-  // Tombol batal: tetap sembunyikan konten
+  // Jika sudah login, langsung tampilkan konten
+  if (sessionStorage.getItem("isLoggedIn") === "true") {
+    pinModal.classList.add("hidden");
+    pinModal.classList.remove("flex");
+    dashboardContent.classList.remove("hidden");
+  }
+
+  // Tombol batal
   btnCancelPIN.addEventListener("click", () => {
     pinInput.value = "";
     pinError.classList.add("hidden");
@@ -273,24 +276,17 @@ document.addEventListener("DOMContentLoaded", () => {
       sessionStorage.setItem("isLoggedIn", "true");
       pinModal.classList.add("hidden");
       pinModal.classList.remove("flex");
-      dashboardContent.classList.remove("hidden"); // tampilkan dashboard
+      dashboardContent.classList.remove("hidden");
     } else {
       pinError.classList.remove("hidden");
     }
   });
-
-  // Cek jika sudah login
-  if (sessionStorage.getItem("isLoggedIn") === "true") {
-    pinModal.classList.add("hidden");
-    pinModal.classList.remove("flex");
-    dashboardContent.classList.remove("hidden");
-  }
 });
   
-// ✅ Cek status login
-if (sessionStorage.getItem("isLoggedIn") !== "true") {
-  window.location.href = "index.html";
-}
+// // ✅ Cek status login
+// if (sessionStorage.getItem("isLoggedIn") !== "true") {
+//   window.location.href = "index.html";
+// }
 
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwzIJxSskbBJauhSmZLof6WRSC6lvt4T-fx2Jy1f-8fxSngUIiEXwy97qqpnacpbo0hqA/exec"; 
 
