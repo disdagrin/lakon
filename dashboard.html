@@ -243,47 +243,6 @@
 
 <script>
 
-document.addEventListener("DOMContentLoaded", () => {
-  const pinModal = document.getElementById("pinModal");
-  const pinInput = document.getElementById("pinInput");
-  const btnCancelPIN = document.getElementById("btnCancelPIN");
-  const btnSubmitPIN = document.getElementById("btnSubmitPIN");
-  const pinError = document.getElementById("pinError");
-  const dashboardContent = document.getElementById("dashboardContent");
-  const correctPIN = "123456";
-
-  // Default: sembunyikan konten dashboard, tampilkan modal
-  dashboardContent.classList.add("hidden");
-  pinModal.classList.remove("hidden");
-  pinModal.classList.add("flex");
-
-  // Jika sudah login, langsung tampilkan konten
-  if (sessionStorage.getItem("isLoggedIn") === "true") {
-    pinModal.classList.add("hidden");
-    pinModal.classList.remove("flex");
-    dashboardContent.classList.remove("hidden");
-  }
-
-  // Tombol batal
-  btnCancelPIN.addEventListener("click", () => {
-    pinInput.value = "";
-    pinError.classList.add("hidden");
-    alert("Anda harus memasukkan PIN untuk mengakses dashboard!");
-  });
-
-  // Tombol submit
-  btnSubmitPIN.addEventListener("click", () => {
-    if (pinInput.value === correctPIN) {
-      sessionStorage.setItem("isLoggedIn", "true");
-      pinModal.classList.add("hidden");
-      pinModal.classList.remove("flex");
-      dashboardContent.classList.remove("hidden");
-    } else {
-      pinError.classList.remove("hidden");
-    }
-  });
-});
-  
 // // ✅ Cek status login
 // if (sessionStorage.getItem("isLoggedIn") !== "true") {
 //   window.location.href = "index.html";
@@ -674,6 +633,49 @@ document.getElementById("selesaiBtn").addEventListener("click", async function (
 
 </script>
 </body>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const pinModal = document.getElementById("pinModal");
+  const pinInput = document.getElementById("pinInput");
+  const btnCancelPIN = document.getElementById("btnCancelPIN");
+  const btnSubmitPIN = document.getElementById("btnSubmitPIN");
+  const pinError = document.getElementById("pinError");
+  const dashboardContent = document.getElementById("dashboardContent");
+  const correctPIN = "123456";
+
+  // Default: sembunyikan konten dashboard, tampilkan modal
+  dashboardContent.classList.add("hidden");
+  pinModal.classList.remove("hidden");
+  pinModal.classList.add("flex");
+
+  // Jika sudah login, langsung tampilkan konten
+  if (sessionStorage.getItem("isLoggedIn") === "true") {
+    pinModal.classList.add("hidden");
+    pinModal.classList.remove("flex");
+    dashboardContent.classList.remove("hidden");
+  }
+
+  // Tombol batal
+  btnCancelPIN.addEventListener("click", () => {
+    pinInput.value = "";
+    pinError.classList.add("hidden");
+    alert("Anda harus memasukkan PIN untuk mengakses dashboard!");
+  });
+
+  // Tombol submit
+  btnSubmitPIN.addEventListener("click", () => {
+    if (pinInput.value === correctPIN) {
+      sessionStorage.setItem("isLoggedIn", "true");
+      pinModal.classList.add("hidden");
+      pinModal.classList.remove("flex");
+      dashboardContent.classList.remove("hidden");
+    } else {
+      pinError.classList.remove("hidden");
+    }
+  });
+});
+</script>  
+  
 <footer class="bg-gray-800 text-white py-8 mt-12">
         <div class="container mx-auto px-4 text-center">
             <p>&copy; 2025 Sistem Digital Pengaduan Konsumen Dinas Perdagangan dan Perindustrian.</p>
