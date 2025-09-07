@@ -380,7 +380,7 @@ input:focus, select:focus, textarea:focus {
 <!--   </div> -->
 <!-- </div> -->
 <!-- Tombol/link ke dashboard -->
-<a href="dashboard.html" id="dashboardLink" class="text-blue-600 underline">Dashboard</a>
+<!-- <a href="dashboard.html" id="dashboardLink" class="text-blue-600 underline">Dashboard</a> -->
 
 <!-- Modal PIN -->
 <div id="pinModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -491,6 +491,14 @@ formData.append("fileData", JSON.stringify(filesArray));
       });
     }
        
+// Ambil elemen modal & input
+const pinModal = document.getElementById("pinModal");
+const pinInput = document.getElementById("pinInput");
+const btnCancel = document.getElementById("btnCancel");
+const btnSubmit = document.getElementById("btnSubmit");
+const pinError = document.getElementById("pinError");
+
+// Seleksi semua link ke dashboard
 const dashboardLinks = document.querySelectorAll("a[href='dashboard.html']");
 dashboardLinks.forEach(link => {
   link.addEventListener("click", function(e) {
@@ -502,33 +510,17 @@ dashboardLinks.forEach(link => {
   });
 });
 
-const pinModal = document.getElementById("pinModal");
-const pinInput = document.getElementById("pinInput");
-const btnCancel = document.getElementById("btnCancel");
-const btnSubmit = document.getElementById("btnSubmit");
-const pinError = document.getElementById("pinError");
-
-// PIN yang dianggap benar
+// PIN benar
 const correctPIN = "123456";
 
-// // Klik Dashboard → buka modal
-// if (dashboardLink && pinModal) {
-//   dashboardLink.addEventListener("click", function(e) {
-//     e.preventDefault();
-//     console.log("Klik dashboard → buka modal"); // cek di console
-//     pinModal.classList.remove("hidden"); // munculin modal
-//     pinInput.value = "";
-//     pinInput.focus();
-//     pinError.classList.add("hidden");
-//   });
-// }
-
+// Tombol batal
 if (btnCancel) {
   btnCancel.addEventListener("click", () => {
     pinModal.classList.add("hidden");
   });
 }
 
+// Tombol submit
 if (btnSubmit) {
   btnSubmit.addEventListener("click", () => {
     if (pinInput.value === correctPIN) {
