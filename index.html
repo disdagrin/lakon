@@ -502,30 +502,32 @@ const pinError = document.getElementById("pinError");
 const correctPIN = "123456";
 
 // Klik Dashboard → buka modal
-if (dashboardLink) {
+if (dashboardLink && pinModal) {
   dashboardLink.addEventListener("click", function(e) {
     e.preventDefault();
-    pinModal.classList.remove("hidden");
+    console.log("Klik dashboard → buka modal"); // cek di console
+    pinModal.classList.remove("hidden"); // munculin modal
     pinInput.value = "";
     pinInput.focus();
     pinError.classList.add("hidden");
   });
 }
 
-// Tombol Batal → tutup modal
-btnCancel.addEventListener("click", () => {
-  pinModal.classList.add("hidden");
-});
+if (btnCancel) {
+  btnCancel.addEventListener("click", () => {
+    pinModal.classList.add("hidden");
+  });
+}
 
-// Tombol OK → cek PIN
-btnSubmit.addEventListener("click", () => {
-  if (pinInput.value === correctPIN) {
-    window.location.href = "dashboard.html"; // redirect
-  } else {
-    pinError.classList.remove("hidden");
-  }
-});
-
+if (btnSubmit) {
+  btnSubmit.addEventListener("click", () => {
+    if (pinInput.value === correctPIN) {
+      window.location.href = "dashboard.html";
+    } else {
+      pinError.classList.remove("hidden");
+    }
+  });
+}
 
 document.getElementById("btnIsiListProdukOverlay").addEventListener("click", () => {
   window.location.href = "index.html";
