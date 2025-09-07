@@ -357,7 +357,7 @@ input:focus, select:focus, textarea:focus {
 <div id="toastContainer"></div>
 
 <!-- Modal PIN -->
-<div id="pinModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<!-- <div id="pinModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white rounded-xl shadow-lg p-6 w-80 text-center animate-fadeIn">
     <h2 class="text-lg font-semibold mb-4">Masukkan PIN</h2>
     <input 
@@ -366,8 +366,8 @@ input:focus, select:focus, textarea:focus {
       maxlength="6"
       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 mb-4"
       placeholder="••••••"
-    >
-    <div class="flex justify-center gap-3">
+    > -->
+<!--     <div class="flex justify-center gap-3">
       <button 
         class="btn-secondary px-4 py-2 rounded-lg"
         id="cancelPinBtn"
@@ -376,10 +376,25 @@ input:focus, select:focus, textarea:focus {
         class="btn-primary px-4 py-2 rounded-lg"
         id="submitPinBtn"
       >OK</button>
+    </div> -->
+<!--   </div> -->
+<!-- </div> -->
+<!-- Tombol/link ke dashboard -->
+<a href="dashboard.html" id="dashboardLink" class="text-blue-600 underline">Dashboard</a>
+
+<!-- Modal PIN -->
+<div id="pinModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+  <div class="bg-white rounded-xl shadow-lg p-6 w-80">
+    <h2 class="text-lg font-semibold mb-4">Masukkan PIN</h2>
+    <input id="pinInput" type="password" maxlength="6" 
+           class="w-full border px-3 py-2 rounded mb-4" placeholder="PIN">
+    <div class="flex justify-end gap-2">
+      <button id="btnCancel" class="px-4 py-2 rounded bg-gray-300">Batal</button>
+      <button id="btnSubmit" class="px-4 py-2 rounded bg-blue-600 text-white">OK</button>
     </div>
+    <p id="pinError" class="text-red-500 text-sm mt-2 hidden">PIN salah!</p>
   </div>
 </div>
-
    <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzIJxSskbBJauhSmZLof6WRSC6lvt4T-fx2Jy1f-8fxSngUIiEXwy97qqpnacpbo0hqA/exec";
 
@@ -475,47 +490,39 @@ formData.append("fileData", JSON.stringify(filesArray));
         reader.onerror = (error) => reject(error);
       });
     }
-// PIN rahasia (bisa diganti sesuai kebutuhan)
-const SECRET_PIN = "123456";  
-
-// Tangkap elemen modal
-const dashboardLink = document.querySelector("a[href='dashboard.html']");
+       
+const dashboardLink = document.querySelector("#dashboardLink");
 const pinModal = document.getElementById("pinModal");
 const pinInput = document.getElementById("pinInput");
-const submitPinBtn = document.getElementById("submitPinBtn");
-const cancelPinBtn = document.getElementById("cancelPinBtn");
+const btnCancel = document.getElementById("btnCancel");
+const btnSubmit = document.getElementById("btnSubmit");
+const pinError = document.getElementById("pinError");
 
-// Buka modal saat klik Dashboard
-document.querySelector("a[href='dashboard.html']").addEventListener("click", function(e) {
-  e.preventDefault(); // cegah langsung masuk dashboard
-  pinModal.classList.remove("hidden");
-  pinInput.value = "";
-  pinInput.focus();
-});
+// PIN yang dianggap benar
+const correctPIN = "123456";
 
-// if (dashboardLink && pinModal && pinInput) {
-//   dashboardLink.addEventListener("click", function(e) {
-//     e.preventDefault(); // cegah langsung masuk dashboard
-//     pinModal.classList.remove("hidden");
-//     pinInput.value = "";
-//     pinInput.focus();
-//   });
-// }
-       
+// Klik Dashboard → buka modal
+if (dashboardLink) {
+  dashboardLink.addEventListener("click", function(e) {
+    e.preventDefault();
+    pinModal.classList.remove("hidden");
+    pinInput.value = "";
+    pinInput.focus();
+    pinError.classList.add("hidden");
+  });
+}
 
 // Tombol Batal → tutup modal
-cancelPinBtn.addEventListener("click", () => {
+btnCancel.addEventListener("click", () => {
   pinModal.classList.add("hidden");
 });
 
-submitPinBtn.addEventListener("click", () => {
-  if (pinInput.value === SECRET_PIN) {
-    sessionStorage.setItem("isLoggedIn", "true"); // tambahkan ini
-    window.location.href = "dashboard.html"; 
+// Tombol OK → cek PIN
+btnSubmit.addEventListener("click", () => {
+  if (pinInput.value === correctPIN) {
+    window.location.href = "dashboard.html"; // redirect
   } else {
-    showToast("PIN salah, coba lagi!", "error");
-    pinInput.value = "";
-    pinInput.focus();
+    pinError.classList.remove("hidden");
   }
 });
 
