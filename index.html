@@ -524,8 +524,16 @@ document.getElementById("btnIsiListProdukOverlay").addEventListener("click", () 
 
   // Event untuk setiap tombol
   document.getElementById("btnList").addEventListener("click", () => toggleDropdown("btnList","dropdownList"));
-  document.getElementById("btnSearch").addEventListener("click", () => toggleDropdown("btnSearch","dropdownSearch"));
-  document.getElementById("btnSetting").addEventListener("click", () => toggleDropdown("btnSetting","dropdownSetting"));
+  const btnSearch = document.getElementById("btnSearch");
+if (btnSearch) {
+  btnSearch.addEventListener("click", () => toggleDropdown("btnSearch","dropdownSearch"));
+}
+
+const btnSetting = document.getElementById("btnSetting");
+if (btnSetting) {
+  btnSetting.addEventListener("click", () => toggleDropdown("btnSetting","dropdownSetting"));
+}
+
 
   // Tutup dropdown kalau klik di luar
   document.addEventListener("click", (e) => {
