@@ -9,7 +9,59 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" >
+<style>
+.btn-primary {
+            background: linear-gradient(135deg, #0737e3 0%, #4c07b3 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            border-color: #f2eef6;
+            color:#17120193;
+            background: linear-gradient(135deg, #0737e3c5 0%, #4c07b3bb 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(2, 27, 249, 0.112);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #f1a808 0%, #f1a808 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            border-color: #f2eef6;
+            color:#17120180;
+            background: linear-gradient(135deg, #f1a708e1 0%, #f1a708a9 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+@keyframes fadeInScale {
+  from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
 
+.animate-fadeIn {
+  animation: fadeInScale 0.25s ease-out;
+}
+  
+</style>
 
 </head>
   
