@@ -522,7 +522,8 @@ if (btnCancel) {
 if (btnSubmit) {
   btnSubmit.addEventListener("click", () => {
     if (pinInput.value === correctPIN) {
-      window.location.href = "dashboard.html";
+    sessionStorage.setItem("isLoggedIn", "true"); // ✅ tandai sudah login
+    window.location.href = "dashboard.html";
     } else {
       pinError.classList.remove("hidden");
     }
