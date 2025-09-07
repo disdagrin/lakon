@@ -486,21 +486,21 @@ const submitPinBtn = document.getElementById("submitPinBtn");
 const cancelPinBtn = document.getElementById("cancelPinBtn");
 
 // Buka modal saat klik Dashboard
-// document.querySelector("a[href='dashboard.html']").addEventListener("click", function(e) {
-//   e.preventDefault(); // cegah langsung masuk dashboard
-//   pinModal.classList.remove("hidden");
-//   pinInput.value = "";
-//   pinInput.focus();
-// });
+document.querySelector("a[href='dashboard.html']").addEventListener("click", function(e) {
+  e.preventDefault(); // cegah langsung masuk dashboard
+  pinModal.classList.remove("hidden");
+  pinInput.value = "";
+  pinInput.focus();
+});
 
-if (dashboardLink && pinModal && pinInput) {
-  dashboardLink.addEventListener("click", function(e) {
-    e.preventDefault(); // cegah langsung masuk dashboard
-    pinModal.classList.remove("hidden");
-    pinInput.value = "";
-    pinInput.focus();
-  });
-}
+// if (dashboardLink && pinModal && pinInput) {
+//   dashboardLink.addEventListener("click", function(e) {
+//     e.preventDefault(); // cegah langsung masuk dashboard
+//     pinModal.classList.remove("hidden");
+//     pinInput.value = "";
+//     pinInput.focus();
+//   });
+// }
        
 
 // Tombol Batal → tutup modal
