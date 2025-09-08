@@ -737,24 +737,43 @@ document.getElementById("selesaiBtn").addEventListener("click", async function (
 
         const pinModal = document.getElementById("pinModal");
         const pinInput = document.getElementById("pinInput");
+        const usernameInput = document.getElementById("usernameInput");
         const pinError = document.getElementById("pinError");
         const btnSubmitPIN = document.getElementById("btnSubmitPIN");
         const btnCancelPIN = document.getElementById("btnCancelPIN");
         const dashboardContent = document.getElementById("dashboardContent");
-        const correctPIN = "123456"; // ganti sesuai kebutuhan
+        // Username & PIN valid (contoh statis)
+      const validUser = "disdagrin";
+      const correctPIN = "123456"; // ganti sesuai kebutuhan
 
         // Default: tampilkan modal, sembunyikan dashboard
         dashboardContent.classList.add("hidden");
         pinModal.classList.remove("hidden");
 
-        btnSubmitPIN.addEventListener("click", () => {
-          if (pinInput.value === correctPIN) {
-            pinModal.remove();
-            dashboardContent.classList.remove("hidden");
-          } else {
-            pinError.classList.remove("hidden");
+        function handleLogin() {
+        const inputUser = usernameInput.value.trim();
+        const inputPIN = pinInput.value.trim();
+
+        if (inputUser === validUser && inputPIN === correctPIN) {
+          pinModal.remove(); // hilangkan modal
+          dashboardContent.classList.remove("hidden"); // tampilkan dashboard
+        } else {
+          pinError.textContent = "Username atau PIN salah!";
+          pinError.classList.remove("hidden");
+        }
+      }
+
+      // Klik tombol OK
+      btnSubmitPIN.addEventListener("click", handleLogin);
+
+      // Tekan Enter di usernameInput atau pinInput
+      [usernameInput, pinInput].forEach(input => {
+        input.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            handleLogin();
           }
         });
+      });
 
         btnCancelPIN.addEventListener("click", () => {
           window.location.href = "index.html";
