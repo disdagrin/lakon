@@ -53,24 +53,6 @@
   <!-- Kanan: Tanggal & Menu -->
   <div class="flex items-center space-x-4 text-gray-600">
 
-    <!-- Notifikasi -->
-    <div class="relative z-50">
-      <button id="notifBtn" class="relative bg-indigo-500 p-2 rounded-lg hover:bg-indigo-700 hidden">
-        🔔
-        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">99</span>
-      </button>
-      <!-- Panel Notifikasi -->
-      <div id="notifPanel" class="hidden absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-xl p-4 z-50">
-        <h4 class="font-semibold text-gray-700 mb-2">Notifikasi</h4>
-        <ul class="space-y-2 text-sm text-gray-600">
-          <!-- <li class="border-b pb-1">Aduan baru dari <b>Andi</b></li>
-          <li class="border-b pb-1">File pendukung diupload oleh <b>Sinta</b></li>
-          <li>Aduan <b>Budi</b> sedang diproses</li> -->
-        </ul>
-      </div>
-    </div>
-
-
     <!-- Aksen Gradient bawah header -->
   <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-600"></div>
   </header>
@@ -79,17 +61,6 @@
   <main class="p-6">
     <h2 class="text-xl font-bold mb-4">Selamat Datang</h2>
     <p class="text-gray-700">Ini adalah dashboard sistem layanan Aduan Konsumen.</p>
-
-    
-      <!-- <div class="p-4 bg-white rounded-xl shadow">
-        <h3 class="font-semibold text-gray-700">Produk Terdaftar</h3>
-        <p class="text-2xl font-bold text-indigo-600">120</p>
-      </div>
-      <div class="p-4 bg-white rounded-xl shadow">
-        <h3 class="font-semibold text-gray-700">Golongan Minol</h3>
-        <p class="text-2xl font-bold text-indigo-600">A, B, C</p>
-      </div>
-    </div> -->
   
     <!-- Tombol Tab -->
 <div class="flex space-x-3 mb-6">
@@ -182,9 +153,6 @@
       <i class="fas fa-list"></i>
       Isi Form Aduan
     </button>
-<audio id="notifSound">
-  <source src="notif.mp3" type="audio/ogg">
-</audio>
 
 <script>
 
@@ -206,12 +174,27 @@ function showTable(type) {
   }
 }
 
+// ✅ Helper masking nomor telp
+function maskPhone(phone) {
+  if (!phone) return "";
+  let str = phone.toString().replace(/\D/g, ""); // hanya angka
+  if (str.length <= 4) return str;
+  return "********" + str.slice(-4);
+}
+
+// ✅ Helper ambil nomor telp dari berbagai variasi header
+function getPhone(item) {
+  return item["No. Telp"] || item["No Telp"] || item["No_telp"] || item["Telp"] || "";
+}
+
+
+
+
 async function loadAduan() {
   try {
     const res = await fetch(WEBAPP_URL);
     const result = await res.json();
 
-    // tampilkan aduan baru
     const tbody = document.getElementById("aduanBody");
     tbody.innerHTML = "";
 
@@ -220,35 +203,33 @@ async function loadAduan() {
       tr.classList.add("hover:bg-gray-50");
 
       tr.innerHTML = `
-<td class="px-4 py-2 border">${item.Nama || ""}</td>
-<td class="px-4 py-2 border">${item.Alamat || ""}</td>
-<td class="px-4 py-2 border">${item["No. Telp"] || ""}</td>
-<td class="px-4 py-2 border">${item["Deskripsi"] || ""}</td>
-<td class="px-4 py-2 border text-center">
-  ${item["File URL(s)"] 
-    ? item["File URL(s)"].split(",").map(f => 
-        `<a href="${f}" target="_blank" class="text-indigo-600 underline">File</a>`
-      ).join(" | ") 
-    : "-"
-  }
-</td>
-
+        <td class="px-4 py-2 border">${item.Nama || ""}</td>
+        <td class="px-4 py-2 border">${item.Alamat || ""}</td>
+        <td class="text-center px-4 py-2 border">${maskPhone(getPhone(item))}</td>
+        <td class="px-4 py-2 border">${item["Deskripsi"] || ""}</td>
+        <td class="px-4 py-2 border text-center">
+          ${item["File URL(s)"] 
+            ? item["File URL(s)"].split(",").map(f => 
+                `<a href="${f}" target="_blank" class="text-indigo-600 underline">File</a>`
+              ).join(" | ") 
+            : "-"
+          }
+        </td>
       `;
       tbody.appendChild(tr);
     });
 
-    // Update counter
+    // ✅ Update counter
     document.getElementById("totalAduanValue").textContent = result.aduan.length;
     document.getElementById("totalProsesValue").textContent = result.proses.length;
     document.getElementById("totalSelesaiValue").textContent = result.selesai.length;
-
 
   } catch (err) {
     console.error("Error load data:", err);
   }
 }
 
-// 🚀 Tampilkan tabel "Sedang Diproses"
+
 function loadProses() {
   const tbody = document.getElementById("onProsesBody");
   tbody.innerHTML = "";
@@ -262,25 +243,24 @@ function loadProses() {
 
         tr.innerHTML = `
           <td class="px-4 py-2 border">${item.Nama || ""}</td>
-<td class="px-4 py-2 border">${item.Alamat || ""}</td>
-<td class="px-4 py-2 border">${item["No. Telp"] || ""}</td>
-<td class="px-4 py-2 border">${item["Deskripsi"] || ""}</td>
-<td class="px-4 py-2 border text-center">
-  ${item["File URL(s)"] 
-    ? item["File URL(s)"].split(",").map(f => 
-        `<a href="${f}" target="_blank" class="text-indigo-600 underline">File</a>`
-      ).join(" | ") 
-    : "-"
-  }
-</td>
-
+          <td class="px-4 py-2 border">${item.Alamat || ""}</td>
+          <td class="px-4 py-2 border text-center">${maskPhone(getPhone(item))}</td>
+          <td class="px-4 py-2 border">${item["Deskripsi"] || ""}</td>
+          <td class="px-4 py-2 border text-center">
+            ${item["File URL(s)"] 
+              ? item["File URL(s)"].split(",").map(f => 
+                  `<a href="${f}" target="_blank" class="text-indigo-600 underline">File</a>`
+                ).join(" | ") 
+              : "-"
+            }
+          </td>
         `;
         tbody.appendChild(tr);
       });
     });
 }
 
-// 🚀 Tampilkan tabel "Selesai"
+
 function loadSelesai() {
   const tbody = document.getElementById("selesaiBody");
   tbody.innerHTML = "";
@@ -294,53 +274,26 @@ function loadSelesai() {
 
         tr.innerHTML = `
           <td class="px-4 py-2 border">${item.Nama || ""}</td>
-<td class="px-4 py-2 border">${item.Alamat || ""}</td>
-<td class="px-4 py-2 border">${item["No. Telp"] || ""}</td>
-<td class="px-4 py-2 border">${item["Deskripsi"] || ""}</td>
-<td class="px-4 py-2 border text-center">
-  ${item["File URL(s)"] 
-    ? item["File URL(s)"].split(",").map(f => 
-        `<a href="${f}" target="_blank" class="text-indigo-600 underline">File</a>`
-      ).join(" | ") 
-    : "-"
-  }
-</td>
-
+          <td class="px-4 py-2 border">${item.Alamat || ""}</td>
+          <td class="px-4 py-2 border text-center">${maskPhone(getPhone(item))}</td>
+          <td class="px-4 py-2 border">${item["Deskripsi"] || ""}</td>
+          <td class="px-4 py-2 border text-center">
+            ${item["File URL(s)"] 
+              ? item["File URL(s)"].split(",").map(f => 
+                  `<a href="${f}" target="_blank" class="text-indigo-600 underline">File</a>`
+                ).join(" | ") 
+              : "-"
+            }
+          </td>
         `;
         tbody.appendChild(tr);
       });
     });
 }
+
 document.getElementById("btnIsiListProdukOverlay").addEventListener("click", () => {
   window.location.href = "index.html";
 });
-// // 🚨 Modal konfirmasi hapus
-// function konfirmasiHapus(rowIndex) {
-//   rowToDelete = rowIndex;
-//   document.getElementById("modalHapus").classList.remove("hidden");
-// }
-// document.getElementById("btnKonfirmasiHapus").addEventListener("click", async () => {
-//   if (!rowToDelete) return;
-//   try {
-//     const res = await fetch(WEBAPP_URL, {
-//       method: "POST",
-//       body: new URLSearchParams({
-//         action: "delete",
-//         row: rowToDelete
-//       })
-//     });
-//     const result = await res.json();
-//     if (result.success) {
-//       alert("✅ " + result.message);
-//       loadAduan();
-//     } else {
-//       alert("❌ " + result.message);
-//     }
-//   } catch (err) {
-//     console.error("Error hapus data:", err);
-//   }
-//   document.getElementById("modalHapus").classList.add("hidden");
-// });
 
 // 🚀 Kirim ke "on_proses"
 async function prosesData(rowIndex, btn) {
@@ -394,31 +347,17 @@ async function selesaiData(rowIndex, btn) {
   }
 }
 
-// 🚨 Notifikasi
-function addNotification(message) {
-  const notifList = document.querySelector("#notifPanel ul");
-  const li = document.createElement("li");
-  li.className = "border-b pb-1";
-  li.innerHTML = message;
-  notifList.prepend(li);
-}
+
 //load otomatis
 window.onload = () => {
   loadAduan();
   loadProses();
   loadSelesai();
-  // setInterval(() => {
-  //   loadAduan();
-  //   loadProses();
-  //   loadSelesai();
-  // }, 10000);
 };
 
-// Toggle notif
-document.getElementById("notifBtn").addEventListener("click", function() {
-  const panel = document.getElementById("notifPanel");
-  panel.classList.toggle("hidden");
-});
+// refresh tiap 30 detik
+setInterval(loadAllTables, 30000);
+
 
 // Jam & tanggal
 function updateTime() {
