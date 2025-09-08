@@ -94,7 +94,7 @@ input:focus, select:focus, textarea:focus {
     <div class="relative z-50">
       <button id="notifBtn" class="relative bg-indigo-500 p-2 rounded-lg hover:bg-indigo-700">
         🔔
-        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full">99</span>
+        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded-full"></span>
       </button>
       <!-- Panel Notifikasi -->
       <div id="notifPanel" class="hidden absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-xl p-4 z-50">
@@ -112,8 +112,11 @@ input:focus, select:focus, textarea:focus {
   <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-600"></div>
   </header>
 
+<modalPIN>
+  <link href="modalPIN.html">
+</modalPIN>
   <!-- Modal PIN -->
-<div id="pinModal" class=" fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<!-- <div id="pinModal" class=" fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white rounded-xl shadow-lg p-6 w-80 text-center animate-fadeIn">
     <h2 class="text-lg font-semibold mb-4">Masukkan PIN</h2>
     <input 
@@ -135,7 +138,7 @@ input:focus, select:focus, textarea:focus {
       >OK</button>
     </div>
   </div>
-</div>
+</div> -->
   
   <!-- Konten -->
   <main id="dashboardContent" class="p-6 hidden">
@@ -503,6 +506,37 @@ document.getElementById("notifBtn").addEventListener("click", function() {
   panel.classList.toggle("hidden");
 });
 
+function loadNotifikasi() {
+  fetch(WEBAPP_URL)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("notifPanel");
+      container.innerHTML = ""; // reset isi tab
+
+      if (data && data.aduan && data.aduan.length > 0) {
+        data.aduan.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "p-3 rounded-lg shadow bg-white border border-gray-200";
+          div.innerHTML = `
+            <p class="text-sm text-gray-500">${item.Timestamp}</p>
+            <p class="text-sm font-semibold">Aduan Baru Dari: ${item.nama || item.Nama}</p>
+          `;
+          container.appendChild(div);
+        });
+      } else {
+        container.innerHTML = `<p class="text-gray-500 italic">Belum ada notifikasi</p>`;
+      }
+    })
+    .catch(err => console.error("Error fetch:", err));
+}
+
+// load pertama kali
+loadNotifikasi();
+
+// refresh tiap 30 detik
+setInterval(loadNotifikasi, 30000);
+
+
 // Jam & tanggal
 function updateTime() {
   const now = new Date();
@@ -651,6 +685,8 @@ function updateData(itemId, fromSheet, toSheet) {
       return Swal.fire("Error!", "Terjadi kesalahan sistem", "error");
     });
 }
+// refresh tiap 30 detik
+setInterval(loadAllTables, 30000);
 
 // === PROSES dengan loading spinner ===
 document.getElementById("prosesBtn").addEventListener("click", async function () {
@@ -692,30 +728,40 @@ document.getElementById("selesaiBtn").addEventListener("click", async function (
   }
 });
 
-  document.addEventListener("DOMContentLoaded", () => {
-      const correctPIN = "123456"; // ubah sesuai PIN kamu
-      const pinModal = document.getElementById("pinModal");
-      const pinInput = document.getElementById("pinInput");
-      const pinError = document.getElementById("pinError");
-      const btnSubmitPIN = document.getElementById("btnSubmitPIN");
-      const btnCancelPIN = document.getElementById("btnCancelPIN");
-      const dashboardContent = document.getElementById("dashboardContent");
+   document.addEventListener("DOMContentLoaded", () => {
+    // Load modal dari file eksternal
+    fetch("modalPIN.html")
+      .then(res => res.text())
+      .then(html => {
+        document.body.insertAdjacentHTML("beforeend", html);
 
-      // Klik tombol Masuk
-      btnSubmitPIN.addEventListener("click", () => {
-        if (pinInput.value === correctPIN) {
-          pinModal.classList.add("hidden");
-          dashboardContent.classList.remove("hidden");
-        } else {
-          pinError.classList.remove("hidden");
-        }
-      });
+        const pinModal = document.getElementById("pinModal");
+        const pinInput = document.getElementById("pinInput");
+        const pinError = document.getElementById("pinError");
+        const btnSubmitPIN = document.getElementById("btnSubmitPIN");
+        const btnCancelPIN = document.getElementById("btnCancelPIN");
+        const dashboardContent = document.getElementById("dashboardContent");
+        const correctPIN = "123456"; // ganti sesuai kebutuhan
 
-      // Klik tombol Batal → balik ke index.html
-      btnCancelPIN.addEventListener("click", () => {
-        window.location.href = "index.html";
-      });
-    }) 
+        // Default: tampilkan modal, sembunyikan dashboard
+        dashboardContent.classList.add("hidden");
+        pinModal.classList.remove("hidden");
+
+        btnSubmitPIN.addEventListener("click", () => {
+          if (pinInput.value === correctPIN) {
+            pinModal.remove();
+            dashboardContent.classList.remove("hidden");
+          } else {
+            pinError.classList.remove("hidden");
+          }
+        });
+
+        btnCancelPIN.addEventListener("click", () => {
+          window.location.href = "index.html";
+        });
+      })
+      .catch(err => console.error("Gagal load modalPIN.html:", err));
+  });
 
 </script>
 </body>
