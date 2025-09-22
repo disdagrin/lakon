@@ -347,6 +347,11 @@ async function selesaiData(rowIndex, btn) {
   }
 }
 
+function loadAllTables() {
+  loadAduan();
+  loadProses();
+  loadSelesai();
+}
 
 //load otomatis
 window.onload = () => {
@@ -354,6 +359,8 @@ window.onload = () => {
   loadProses();
   loadSelesai();
 };
+
+
 
 // refresh tiap 30 detik
 setInterval(loadAllTables, 30000);
@@ -364,15 +371,22 @@ function updateTime() {
   const now = new Date();
   const options = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
   const tanggal = now.toLocaleDateString("id-ID", options);
+
   const jam = String(now.getHours()).padStart(2, '0');
   const menit = String(now.getMinutes()).padStart(2, '0');
   const detik = String(now.getSeconds()).padStart(2, '0');
   const waktu = `${jam}:${menit}:${detik}`;
+
   document.getElementById("teksTanggalJam").textContent = `${tanggal} | ${waktu}`;
 }
+
 setInterval(updateTime, 1000);
 updateTime();
+
+
 </script>
+
+
 </body>
   <!-- 🔔 Modal Konfirmasi Hapus -->
 <footer class="bg-gray-800 text-white py-8 mt-12">
